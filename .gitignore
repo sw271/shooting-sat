@@ -2,4 +2,4 @@
 client
 
 __pycache__
-# bsp
+*.bsp
