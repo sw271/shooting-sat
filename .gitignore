@@ -1,2 +1,5 @@
 .env
 client
+
+__pycache__
+# bsp
