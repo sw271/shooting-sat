@@ -6,10 +6,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { ISatellitePass } from "../interfaces/ISatellitePass";
+import { SatellitePass } from "../interfaces/SatelitePass";
 
 interface Props {
-  data: ISatellitePass[];
+  data: SatellitePass[];
 }
 
 export const SatellitePassTable: React.FC<Props> = (props) => {
@@ -22,33 +22,22 @@ export const SatellitePassTable: React.FC<Props> = (props) => {
             <TableCell align="center" colSpan={3}>
               Rise
             </TableCell>
-            <TableCell align="center" colSpan={3}>
-              Set
-            </TableCell>
             <TableCell />
           </TableRow>
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>Time</TableCell>
             <TableCell>Azimuth</TableCell>
-            <TableCell>Elevation</TableCell>
-            <TableCell>Time</TableCell>
-            <TableCell>Azimuth</TableCell>
-            <TableCell>Elevation</TableCell>
-            <TableCell>Cloud Cover</TableCell>
+            <TableCell>Is Visible</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {props.data.map((d) => (
-            <TableRow key={d.name + d.rise.timestamp.toISOString()}>
+            <TableRow key={d.name + d.riseDatetime.toISOString()}>
               <TableCell>{d.name} </TableCell>
-              <TableCell>{d.rise.timestamp.toISOString()} </TableCell>
-              <TableCell>{d.rise.azimuth} </TableCell>
-              <TableCell>{d.rise.elevation} </TableCell>
-              <TableCell>{d.set.timestamp.toISOString()} </TableCell>
-              <TableCell>{d.set.azimuth} </TableCell>
-              <TableCell>{d.set.elevation} </TableCell>
-              <TableCell>{d.weather.cloudCover}</TableCell>
+              <TableCell>{d.riseDatetime.toLocaleString()} </TableCell>
+              <TableCell>{d.riseAzimuth} </TableCell>
+              <TableCell>{d.isVisble ? "Yes" : "No"}</TableCell>
             </TableRow>
           ))}
         </TableBody>

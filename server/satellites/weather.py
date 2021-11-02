@@ -3,7 +3,7 @@ from pyowm import OWM
 from decouple import config
 
 
-class Weather:
+class weather:
     _open_weather_api_key = config('OPEN_WEATHER_API_KEY')
     _owm = OWM(_open_weather_api_key)
     _mgr = _owm.weather_manager()

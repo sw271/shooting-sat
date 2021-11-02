@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
-from Weather import Weather
 from skyfield.api import load, wgs84
 from skyfield import almanac
 import pytz
 
 
-class Satellites:
+class satellites:
 
     planets_bsp = 'de421.bsp'
     stations_url = './stations.txt'

@@ -1,3 +1,5 @@
 skyfield
 python-decouple
 pyowm
+uvicorn
+ariadne
