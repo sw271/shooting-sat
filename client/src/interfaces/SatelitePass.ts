@@ -20,8 +20,8 @@ export class SatellitePass {
   get name() {
     return this._satellitePass.name;
   }
-  get isVisble() {
-    return this._satellitePass.isVisible;
+  get cloudCover() {
+    return this._satellitePass.cloudCover;
   }
   get riseAzimuth() {
     return this._satellitePass.riseAzimuth;

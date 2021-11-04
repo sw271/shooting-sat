@@ -19,7 +19,7 @@ const generateSatelitePass = (): SatellitePass => {
     riseAzimuth: generateAzimuth(),
     setDatetime: new Date(setEpoch).toISOString(),
     setAzimuth: generateAzimuth(),
-    isVisible: randomBetween(0, 100) < 50,
+    cloudCover: randomBetween(0, 100),
   });
 };
 

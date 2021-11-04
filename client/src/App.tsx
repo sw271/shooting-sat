@@ -1,5 +1,5 @@
 import "./App.css";
-import { generateMockData } from "./mock/mockdata";
+// import { generateMockData } from "./mock/mockdata";
 import { SatellitePassTable } from "./components/SatellitePassTable";
 import {
   ApolloClient,
@@ -28,13 +28,13 @@ const GET_PASSES = gql`
         riseAzimuth
         setDatetime
         setAzimuth
-        isVisible
+        cloudCover
       }
     }
   }
 `;
 
-const mockData = generateMockData();
+// const mockData = generateMockData();
 
 function App() {
   const { loading, error, data } = useQuery<{

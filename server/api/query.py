@@ -35,7 +35,7 @@ def resolve_get_passes(*_, input=None):
             riseAzimuth=p['visible_pass'][1].degrees,
             setDatetime=set_datetime.isoformat(),
             setAzimuth=p['visible_pass'][3].degrees,
-            isVisible=w.is_clear(rise_datetime) or w.is_clear(set_datetime)
+            cloudCover=w.cloud_cover(rise_datetime)
         )
         ret['passes'].append(crnt)
 

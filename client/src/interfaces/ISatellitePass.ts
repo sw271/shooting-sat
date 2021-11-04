@@ -4,5 +4,5 @@ export interface ISatellitePass {
   riseAzimuth: number;
   setDatetime: string;
   setAzimuth: number;
-  isVisible: boolean;
+  cloudCover: number;
 }

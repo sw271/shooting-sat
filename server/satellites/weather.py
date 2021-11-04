@@ -18,7 +18,7 @@ class weather:
         self._one_call_object = self._mgr.one_call(
             lat=self._lat, lon=self._lng)
 
-    def is_clear(self, date: datetime) -> bool:
+    def cloud_cover(self, date: datetime) -> bool:
         if self._one_call_object == None:
             self.fetch()
 
@@ -26,6 +26,6 @@ class weather:
         for fc in hrly_fc:
             fc_date: datetime = fc.reference_time('date')
             if date >= fc_date and date <= fc_date + timedelta(hours=1):
-                return fc.clouds < self.cloud_cover_limit
+                return fc.clouds
 
         raise Exception("Forecast outside date")

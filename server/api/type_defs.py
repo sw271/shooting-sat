@@ -22,6 +22,6 @@ type_defs = gql("""
         riseAzimuth: Float!
         setDatetime: String!
         setAzimuth: Float!
-        isVisible: Boolean!
+        cloudCover: Float!
     }
 """)
