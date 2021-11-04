@@ -3,3 +3,4 @@ python-decouple
 pyowm
 uvicorn
 ariadne
+pytz

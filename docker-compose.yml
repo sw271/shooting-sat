@@ -11,5 +11,15 @@ services:
       - 3000:3000
     working_dir: /project
     entrypoint: sh -c "yarn install && yarn start"
+  server:
+    image: python:3-slim-buster
+    networks:
+      - app-net
+    volumes:
+      - ./server:/project
+    ports:
+      - 8000:8000
+    working_dir: /project
+    entrypoint: bash -c "pip install -r requirements.txt && uvicorn --host=0.0.0.0 app:app"
 networks:
   app-net:
