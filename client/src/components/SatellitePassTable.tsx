@@ -37,7 +37,7 @@ export const SatellitePassTable: React.FC<Props> = (props) => {
               <TableCell>{d.name} </TableCell>
               <TableCell>{d.riseDatetime.toLocaleString()} </TableCell>
               <TableCell>{d.riseAzimuth} </TableCell>
-              <TableCell>{d.cloudCover}</TableCell>
+              <TableCell>{d.cloudCover || "-"}</TableCell>
             </TableRow>
           ))}
         </TableBody>

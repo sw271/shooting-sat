@@ -28,4 +28,4 @@ class weather:
             if date >= fc_date and date <= fc_date + timedelta(hours=1):
                 return fc.clouds
 
-        raise Exception("Forecast outside date")
+        return None
