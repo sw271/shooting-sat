@@ -17,6 +17,7 @@ services:
       - app-net
     volumes:
       - ./server:/project
+      - ./data:/data
     ports:
       - 8000:8000
     working_dir: /project
