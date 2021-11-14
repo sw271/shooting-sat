@@ -3,12 +3,14 @@ import { ISatellitePass } from "./ISatellitePass";
 export class SatellitePass {
   private _satellitePass: ISatellitePass;
   private _riseDatetime: Date;
-  private _setDatetime: Date;
+  private _setDatetime: Date | undefined;
 
   constructor(args: ISatellitePass) {
     this._satellitePass = args;
     this._riseDatetime = new Date(args.riseDatetime);
-    this._setDatetime = new Date(args.setDatetime);
+    this._setDatetime = args.setDatetime
+      ? new Date(args.setDatetime)
+      : undefined;
   }
 
   get riseDatetime() {

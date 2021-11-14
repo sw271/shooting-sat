@@ -28,15 +28,26 @@ def resolve_get_passes(*_, input=None):
     ret = dict(passes=[])
     for p in passes:
         rise_datetime = p['visible_pass'][0].utc_datetime()
-        set_datetime = p['visible_pass'][2].utc_datetime()
-        crnt = dict(
-            name=p['satellite'].name,
-            riseDatetime=rise_datetime.isoformat(),
-            riseAzimuth=p['visible_pass'][1].degrees,
-            setDatetime=set_datetime.isoformat(),
-            setAzimuth=p['visible_pass'][3].degrees,
-            cloudCover=w.cloud_cover(rise_datetime)
-        )
+        crnt = None
+        if p['visible_pass'][2] is not None:
+            set_datetime = p['visible_pass'][2].utc_datetime()
+            crnt = dict(
+                name=p['satellite'].name,
+                riseDatetime=rise_datetime.isoformat(),
+                riseAzimuth=p['visible_pass'][1].degrees,
+                setDatetime=set_datetime.isoformat(),
+                setAzimuth=p['visible_pass'][3].degrees,
+                cloudCover=w.cloud_cover(rise_datetime)
+            )
+        else:
+            crnt = dict(
+                name=p['satellite'].name,
+                riseDatetime=rise_datetime.isoformat(),
+                riseAzimuth=p['visible_pass'][1].degrees,
+                setDatetime=None,
+                setAzimuth=None,
+                cloudCover=w.cloud_cover(rise_datetime)
+            )
         ret['passes'].append(crnt)
 
     return ret

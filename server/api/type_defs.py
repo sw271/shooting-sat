@@ -20,8 +20,8 @@ type_defs = gql("""
         name: String!
         riseDatetime: String!
         riseAzimuth: Float!
-        setDatetime: String!
-        setAzimuth: Float!
+        setDatetime: String
+        setAzimuth: Float
         cloudCover: Float
     }
 """)
