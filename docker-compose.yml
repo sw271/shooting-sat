@@ -10,7 +10,7 @@ services:
     ports:
       - 3000:3000
     working_dir: /project
-    entrypoint: sh -c "yarn install && yarn start"
+    entrypoint: sh -c "yarn install && HTTPS=true yarn start"
   server:
     image: python:3-slim-buster
     networks:
