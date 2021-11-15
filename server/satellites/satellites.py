@@ -8,7 +8,7 @@ class satellites:
 
     planets_bsp = 'de421.bsp'
     stations_url = '/data/visual.txt'
-    future_hours = 2
+    future_hours = 24 * 2
 
     def __init__(self, lat: float, lng: float, altitude_degrees=30.0) -> None:
         self._location = wgs84.latlon(lat, lng)
