@@ -7,7 +7,7 @@ import pytz
 class satellites:
 
     planets_bsp = 'de421.bsp'
-    stations_url = '/data/active.txt'
+    stations_url = '/data/visual.txt'
     future_hours = 2
 
     def __init__(self, lat: float, lng: float, altitude_degrees=30.0) -> None:
