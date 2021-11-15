@@ -2,22 +2,23 @@ import os
 from datetime import datetime, timedelta
 from urllib.request import urlretrieve
 
-VISUAL_FILE = '/data/visual.txt'
+FILES = ['active.txt', 'visual.txt']
+BASE_PATH = '/data'
 
 
-def download_visual():
-    print("Downloading visual.txt")
-    urlretrieve(
-        "https://www.celestrak.com/NORAD/elements/visual.txt", VISUAL_FILE)
+def download_file(filename):
+    local_file = os.path.join(BASE_PATH, filename)
+    if not os.path.isfile(local_file) or (os.path.getmtime(local_file) < (datetime.now() - timedelta(days=1)).timestamp()):
+        print(f"Downloading {filename}")
+        urlretrieve(
+            f"https://www.celestrak.com/NORAD/elements/{filename}", local_file)
+    else:
+        print(f"No need to update {local_file}")
 
 
 def main():
-    if not os.path.isfile(VISUAL_FILE):
-        download_visual()
-    elif os.path.getmtime(VISUAL_FILE) < (datetime.now() - timedelta(days=1)).timestamp():
-        download_visual()
-    else:
-        print("No need to update")
+    for file in FILES:
+        download_file(file)
 
 
 if __name__ == "__main__":
