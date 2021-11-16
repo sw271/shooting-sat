@@ -1,73 +1,74 @@
 from datetime import datetime, timedelta
+from enum import IntEnum
+from typing import TypedDict
 from skyfield.api import load, wgs84
 from skyfield import almanac
 import pytz
 
 
-class satellites:
+class SatelliteEventType(IntEnum):
+    RISE = 0
+    CULMINATE = 1
+    SET = 2
 
-    planets_bsp = 'de421.bsp'
-    stations_url = '/data/visual.txt'
-    future_hours = 24 * 2
 
-    def __init__(self, lat: float, lng: float, altitude_degrees=30.0) -> None:
-        self._location = wgs84.latlon(lat, lng)
-        self._planets = load(self.planets_bsp)
-        self._satellites = load.tle_file(self.stations_url)
-        self._altitude_degrees = altitude_degrees
-        self._is_twilight = almanac.dark_twilight_day(
-            self._planets, self._location)
-        print('Loaded', len(self._satellites), 'satellites')
+class Event(TypedDict):
+    dateUtc: datetime
+    type: SatelliteEventType
+    azimuth: float
+    altitude: float
 
-    def get_passes(self):
-        ts = load.timescale()
-        now = pytz.utc.localize(datetime.utcnow())
-        t0 = ts.from_datetime(now)
-        t1 = ts.from_datetime(now + timedelta(hours=self.future_hours))
-        all_passes = []
-        count = 1
-        total = len(self._satellites)
-        for satellite in self._satellites:
-            print(f"Checking satellite ${count} of ${total}")
-            count += 1
-            passes = self._find_next_visible_passes(
-                self._location, t0, t1, self._altitude_degrees, self._planets, satellite)
-            if len(passes) > 0:
-                for p in passes:
-                    all_passes.append(
-                        dict(satellite=satellite, visible_pass=p))
-        all_passes.sort(key=lambda x: x['visible_pass'][0].utc_datetime())
-        return all_passes
 
-    def _find_next_visible_passes(self, location, t1, t2, altitude_degrees, eph, satellite):
+class SatelliteEvents(TypedDict):
+    satelliteId: str
+    events: list[Event]
 
-        ret = []
-        riseTime, riseAz, setTime, setAz = None, None, None, None
-        # Culminate may occur more than once, so collect them all.
-        culminateTimes = []
-        t, events = satellite.find_events(location, t1, t2, altitude_degrees)
+
+class SatelliteVisibleEvents(TypedDict):
+    dateFromIncUtc: datetime
+    dateToExcUtc: datetime
+    satelliteEvents: list[SatelliteEvents]
+
+
+PLANETS_BSP = 'de421.bsp'
+STATIONS_URL = '/data/visual.txt'
+# print(post_weight(0))
+
+
+def get_visible_events(lat: float, lng: float, altitude_degrees: float, date_from_utc: datetime = None, future_mins=120 * 12) -> SatelliteVisibleEvents:
+    location = wgs84.latlon(lat, lng)
+    planets = load(PLANETS_BSP)
+    satellites = load.tle_file(STATIONS_URL)
+    is_twilight_fn = almanac.dark_twilight_day(planets, location)
+    ts = load.timescale()
+    now = date_from_utc if date_from_utc else pytz.utc.localize(
+        datetime.utcnow())
+    t0 = ts.from_datetime(now)
+    t1 = ts.from_datetime(now + timedelta(minutes=future_mins))
+    visible_satellite_events: list[SatelliteEvents] = []
+    for satellite in satellites:
+        t, events = satellite.find_events(location, t0, t1, altitude_degrees)
         diff = satellite - location
+        satellite_events: SatelliteEvents = {
+            'satelliteId': satellite.model.satnum,
+            'events': []
+        }
         for ti, event in zip(t, events):
-            if event == 0:  # Rise
-                riseTime = ti
-                alt, riseAz, distance = diff.at(riseTime).altaz()
+            is_twilight = is_twilight_fn(ti)
+            if is_twilight > 2 or not satellite.at(ti).is_sunlit(planets):
+                continue
+            alt, az, _ = diff.at(ti).altaz()
+            satellite_events['events'].append({
+                'altitude': alt.degrees,
+                'azimuth': az.degrees,
+                'dateUtc': ti.utc_datetime(),
+                'type': event
+            })
+        if satellite_events['events']:
+            visible_satellite_events.append(satellite_events)
 
-            elif event == 1:  # Culminate
-                culminateTimes.append(ti)
-
-            else:  # Set
-                if riseTime is not None and culminateTimes:
-                    for culmination in culminateTimes:
-                        # 1 = Astronomical, 2 = Nautical
-                        is_twilight = self._is_twilight(culmination)
-                        if (is_twilight == 1 or is_twilight == 2) and satellite.at(culmination).is_sunlit(eph):
-                            setTime = ti
-                            alt, setAz, distance = diff.at(ti).altaz()
-                            ret.append((riseTime, riseAz, setTime, setAz))
-                            break
-                culminateTimes = []
-                riseTime, riseAz, setTime, setAz = None, None, None, None
-
-        if riseTime is not None:
-            ret.append((riseTime, riseAz, setTime, setAz))
-        return ret
+    return {
+        'dateFromIncUtc': t0.utc_datetime(),
+        'dateToExcUtc': t1.utc_datetime(),
+        'satelliteEvents': visible_satellite_events
+    }

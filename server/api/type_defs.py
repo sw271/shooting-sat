@@ -1,27 +1,36 @@
 from ariadne import gql
 
 type_defs = gql("""
+    type Query {
+        getEvents(input: GetEventsInput!): GetEventsPayload!
+    }
 
-    input GetPassesInput {
+    input GetEventsInput {
         lat: Float!
         lng: Float!
         alt: Float
+        dateFromIncUtc: String
     }
 
-    type Query {
-        getPasses(input: GetPassesInput!): GetPassesPayload!
+    type GetEventsPayload {
+        dateFromIncUtc: String!
+        dateToExcUtc: String!
+        satelliteEvents: [SatelliteEvents!]!
     }
 
-    type GetPassesPayload {
-        passes: [SatellitePass!]!
+    enum EventType {
+        RISE
+        CULMINATE
+        SET
     }
-
-    type SatellitePass {
-        name: String!
-        riseDatetime: String!
-        riseAzimuth: Float!
-        setDatetime: String
-        setAzimuth: Float
-        cloudCover: Float
+    type SatelliteEvents {
+        satelliteId: String!
+        events: [Event!]!
+    }
+    type Event {
+        dateUtc: String!
+        type: EventType!
+        azimuth: Float!
+        altitude: Float!
     }
 """)

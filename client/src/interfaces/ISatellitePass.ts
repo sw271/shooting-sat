@@ -1,8 +1,7 @@
 export interface ISatellitePass {
   name: string;
-  riseDatetime: string;
+  riseDatetime: Date;
   riseAzimuth: number;
-  setDatetime?: string;
-  setAzimuth?: number;
-  cloudCover?: number;
+  setDatetime: Date;
+  setAzimuth: number;
 }

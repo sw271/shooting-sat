@@ -6,10 +6,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { SatellitePass } from "../interfaces/SatelitePass";
+import { ISatellitePass } from "../interfaces/ISatellitePass";
 
 interface Props {
-  data: SatellitePass[];
+  data: ISatellitePass[];
 }
 
 export const SatellitePassTable: React.FC<Props> = (props) => {
@@ -38,14 +38,12 @@ export const SatellitePassTable: React.FC<Props> = (props) => {
               <TableCell>{d.name} </TableCell>
               <TableCell>{d.riseDatetime.toLocaleString()} </TableCell>
               <TableCell>
-                {d.setDatetime !== undefined
-                  ? (d.setDatetime.valueOf() - d.riseDatetime.valueOf()) /
-                    1000 /
-                    60
-                  : "-"}
+                {(d.setDatetime.valueOf() - d.riseDatetime.valueOf()) /
+                  1000 /
+                  60}
               </TableCell>
               <TableCell>{d.riseAzimuth} </TableCell>
-              <TableCell>{d.cloudCover || "-"}</TableCell>
+              <TableCell>{"-"}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -1,6 +1,6 @@
 import "./App.css";
 // import { generateMockData } from "./mock/mockdata";
-import { SatellitePassTable } from "./components/SatellitePassTable";
+// import { SatellitePassTable } from "./components/SatellitePassTable";
 import {
   ApolloClient,
   InMemoryCache,
@@ -8,8 +8,15 @@ import {
   useQuery,
   gql,
 } from "@apollo/client";
+// import { ISatellitePass } from "./interfaces/ISatellitePass";
+// import { SatellitePass } from "./interfaces/SatelitePass";
+import {
+  EEventType,
+  IGetEventsPayload,
+  // ISatelliteEvent,
+} from "./interfaces/ISatelliteEvent";
 import { ISatellitePass } from "./interfaces/ISatellitePass";
-import { SatellitePass } from "./interfaces/SatelitePass";
+import { SatellitePassTable } from "./components/SatellitePassTable";
 
 const client = new ApolloClient({
   uri: "http://localhost:8000",
@@ -19,27 +26,28 @@ const client = new ApolloClient({
 const LAT = 51.454514;
 const LNG = -2.58791;
 
-const GET_PASSES = gql`
-  query GetPasses($lat: Float!, $lng: Float!) {
-    getPasses(input: { lat: $lat, lng: $lng }) {
-      passes {
-        name
-        riseDatetime
-        riseAzimuth
-        setDatetime
-        setAzimuth
-        cloudCover
+const GET_EVENTS = gql`
+  query GetEvents($lat: Float!, $lng: Float!) {
+    getEvents(input: { lat: $lat, lng: $lng }) {
+      dateFromIncUtc
+      dateToExcUtc
+      satelliteEvents {
+        satelliteId
+        events {
+          dateUtc
+          type
+          azimuth
+          altitude
+        }
       }
     }
   }
 `;
 
-// const mockData = generateMockData();
-
 function App() {
   const { loading, error, data } = useQuery<{
-    getPasses: { passes: ISatellitePass[] };
-  }>(GET_PASSES, {
+    getEvents: IGetEventsPayload;
+  }>(GET_EVENTS, {
     variables: {
       lat: LAT,
       lng: LNG,
@@ -49,12 +57,37 @@ function App() {
   if (error || !data) return <p>Error :(</p>;
 
   console.log(data);
+  const passes: ISatellitePass[] = [];
+  data.getEvents.satelliteEvents.forEach((sat) => {
+    let riseDatetime: Date | undefined = undefined;
+    let riseAzimuth: number | undefined = undefined;
+    sat.events.forEach((e) => {
+      if (e.type === EEventType.RISE) {
+        riseDatetime = new Date(e.dateUtc);
+        riseAzimuth = e.azimuth;
+      } else if (
+        e.type === EEventType.SET &&
+        riseDatetime !== undefined &&
+        riseAzimuth !== undefined
+      ) {
+        passes.push({
+          name: sat.satelliteId,
+          riseDatetime,
+          riseAzimuth,
+          setDatetime: new Date(e.dateUtc),
+          setAzimuth: e.azimuth,
+        });
+        riseDatetime = undefined;
+        riseAzimuth = undefined;
+      }
+    });
+  });
+
+  passes.sort((a, b) => a.riseDatetime.valueOf() - b.riseDatetime.valueOf());
 
   return (
     <div className="App">
-      <SatellitePassTable
-        data={data.getPasses.passes.map((x) => new SatellitePass(x))}
-      />
+      <SatellitePassTable data={passes} />
     </div>
   );
 }

@@ -22,12 +22,12 @@ services:
       - 8000:8000
     working_dir: /project
     entrypoint: bash -c "pip install -r requirements.txt && uvicorn --host=0.0.0.0 --reload app:app"
-  # cron:
-  #   image: python:3-slim-buster
-  #   volumes:
-  #     - ./cron:/project
-  #     - ./data:/data
-  #   working_dir: /project
-  #   entrypoint: tail -f /dev/null
+  cron:
+    image: python:3-slim-buster
+    volumes:
+      - ./cron:/project
+      - ./data:/data
+    working_dir: /project
+    entrypoint: tail -f /dev/null
 networks:
   app-net:
