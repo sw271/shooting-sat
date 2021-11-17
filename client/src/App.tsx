@@ -17,18 +17,59 @@ import {
 } from "./interfaces/ISatelliteEvent";
 import { ISatellitePass } from "./interfaces/ISatellitePass";
 import { SatellitePassTable } from "./components/SatellitePassTable";
+import { useEffect, useState } from "react";
+
+const cache: InMemoryCache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        getEvents: {
+          keyArgs: false,
+          merge(existing: IGetEventsPayload, incoming: IGetEventsPayload) {
+            if (!existing) return incoming;
+            const ret: IGetEventsPayload = {
+              ...existing,
+              dateToExcUtc: incoming.dateToExcUtc,
+              satelliteEvents: existing.satelliteEvents.map((x) => {
+                return {
+                  satelliteId: x.satelliteId,
+                  events: [...x.events],
+                };
+              }),
+            };
+
+            incoming.satelliteEvents.forEach((e) => {
+              const found = ret.satelliteEvents.find(
+                (x) => x.satelliteId === e.satelliteId
+              );
+              if (found) {
+                found.events.push(...e.events);
+              } else {
+                ret.satelliteEvents.push(e);
+              }
+            });
+
+            return ret;
+          },
+        },
+      },
+    },
+  },
+});
 
 const client = new ApolloClient({
   uri: "http://localhost:8000",
-  cache: new InMemoryCache(),
+  cache,
 });
 
 const LAT = 51.454514;
 const LNG = -2.58791;
 
 const GET_EVENTS = gql`
-  query GetEvents($lat: Float!, $lng: Float!) {
-    getEvents(input: { lat: $lat, lng: $lng }) {
+  query GetEvents($lat: Float!, $lng: Float!, $dateFromIncUtc: String) {
+    getEvents(
+      input: { lat: $lat, lng: $lng, dateFromIncUtc: $dateFromIncUtc }
+    ) {
       dateFromIncUtc
       dateToExcUtc
       satelliteEvents {
@@ -45,7 +86,22 @@ const GET_EVENTS = gql`
 `;
 
 function App() {
-  const { loading, error, data } = useQuery<{
+  useEffect(() => {
+    if (data) {
+      const firstDate = new Date(data.getEvents.dateFromIncUtc).valueOf();
+      const lastDate = new Date(data.getEvents.dateToExcUtc).valueOf();
+      if (lastDate - firstDate < 1000 * 60 * 60 * 24) {
+        fetchMore({
+          variables: {
+            lat: LAT,
+            lng: LNG,
+            dateFromIncUtc: data.getEvents.dateToExcUtc,
+          },
+        });
+      }
+    }
+  });
+  const { loading, error, data, fetchMore } = useQuery<{
     getEvents: IGetEventsPayload;
   }>(GET_EVENTS, {
     variables: {

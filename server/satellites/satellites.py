@@ -35,7 +35,7 @@ STATIONS_URL = '/data/visual.txt'
 # print(post_weight(0))
 
 
-def get_visible_events(lat: float, lng: float, altitude_degrees: float, date_from_utc: datetime = None, future_mins=120 * 12) -> SatelliteVisibleEvents:
+def get_visible_events(lat: float, lng: float, altitude_degrees: float, date_from_utc: datetime = None, future_mins=120) -> SatelliteVisibleEvents:
     location = wgs84.latlon(lat, lng)
     planets = load(PLANETS_BSP)
     satellites = load.tle_file(STATIONS_URL)
