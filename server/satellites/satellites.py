@@ -31,7 +31,7 @@ class SatelliteVisibleEvents(TypedDict):
 
 
 PLANETS_BSP = 'de421.bsp'
-STATIONS_URL = '/data/visual.txt'
+STATIONS_URL = '/data/active.txt'
 # print(post_weight(0))
 
 
@@ -45,6 +45,19 @@ def get_visible_events(lat: float, lng: float, altitude_degrees: float, date_fro
         datetime.utcnow())
     t0 = ts.from_datetime(now)
     t1 = ts.from_datetime(now + timedelta(minutes=future_mins))
+
+    # in an attempt to reduce computation:
+    # only find_events during known twilight for the location:
+    # and only if the timedelta is max 2hrs:
+    if future_mins <= 120:
+        if is_twilight_fn(t0) > 2 and is_twilight_fn(t1) > 2:
+            print("Not twiglight hours, returning early")
+            return {
+                'dateFromIncUtc': t0.utc_datetime(),
+                'dateToExcUtc': t1.utc_datetime(),
+                'satelliteEvents': []
+            }
+
     visible_satellite_events: list[SatelliteEvents] = []
     for satellite in satellites:
         t, events = satellite.find_events(location, t0, t1, altitude_degrees)
