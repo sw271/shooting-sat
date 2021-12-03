@@ -31,7 +31,7 @@ class SatelliteVisibleEvents(TypedDict):
 
 
 PLANETS_BSP = 'de421.bsp'
-STATIONS_URL = '/data/active.txt'
+STATIONS_URL = '/data/visual.txt'
 # print(post_weight(0))
 
 
