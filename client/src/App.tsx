@@ -20,6 +20,7 @@ import { SatellitePassTable } from "./components/SatellitePassTable";
 import { useEffect, useState } from "react";
 import { Map, Marker, Overlay } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
+import { LocationScreen } from "./screens/LocationScreen";
 
 
 const cache: InMemoryCache = new InMemoryCache({
@@ -88,7 +89,11 @@ const GET_EVENTS = gql`
   }
 `;
 
-function App() {
+interface Props {
+  latitude: number;
+  longitude: number;
+}
+const App: React.FC<Props> = (props) => {
   useEffect(() => {
     if (data) {
       const firstDate = new Date(data.getEvents.dateFromIncUtc).valueOf();
@@ -96,8 +101,8 @@ function App() {
       if (lastDate - firstDate < 1000 * 60 * 60 * 24) {
         fetchMore({
           variables: {
-            lat: LAT,
-            lng: LNG,
+            lat: props.latitude,
+            lng: props.longitude,
             dateFromIncUtc: data.getEvents.dateToExcUtc,
           },
         });
@@ -108,8 +113,8 @@ function App() {
     getEvents: IGetEventsPayload;
   }>(GET_EVENTS, {
     variables: {
-      lat: LAT,
-      lng: LNG,
+      lat: props.latitude,
+      lng: props.longitude,
     },
   });
   if (loading) return <p>Loading...</p>;
@@ -151,34 +156,99 @@ function App() {
   );
 }
 
-const AppProvider: React.FC = () => (
-  <ApolloProvider client={client}>
-    <div>
-      <Map
-        provider={stamenToner}
-        height={300}
-        // width={300}
-        defaultCenter={[LAT, LNG]} defaultZoom={18}
-      >
-        <Marker width={50} anchor={[LAT, LNG]} />
-        {/* <Overlay
-          offset={[150, 150]}
+const AppProvider2: React.FC = () => {
 
-        >
-          <svg width={300} height={300}>
-            <defs>
-              <mask id="hole">
-                <rect width="100%" height="100%" fill="white" />
-                <circle r="100" cx="150" cy="150" fill="black" />
-              </mask>
-            </defs>
-            <rect id="donut" width="1000%" height="1000%" mask="url(#hole)" />
-          </svg>
-        </Overlay> */}
-      </Map>
+  const [position, setPosition] = useState<GeolocationPosition | undefined>(undefined);
+
+  useEffect(() => {
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        console.log("got pos", pos)
+        setPosition(pos);
+        // alert(`lat: ${pos.coords.latitude}, lng ${pos.coords.longitude}`)
+      },
+      (error) => {
+        console.log("Handle no goeloaction")
+        console.log("posError", error)
+        setPosition({
+          coords: {
+            latitude: LAT,
+            longitude: LNG,
+            accuracy: 1,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null
+          },
+          timestamp: Date.now()
+        })
+      },
+      {
+        enableHighAccuracy: true,
+
+      }
+    )
+
+    const id = navigator.geolocation.watchPosition((pos) => {
+      console.log("got pos", pos)
+      setPosition(pos);
+      // alert(`lat: ${pos.coords.latitude}, lng ${pos.coords.longitude}`)
+    })
+
+    return () => navigator.geolocation.clearWatch(id)
+  }, [])
+  console.log("from state", position)
+
+  if (!position) {
+    return <div>Loading...</div>
+  }
+
+  return (
+    <div>
+      <div>lat: {position.coords.latitude}</div>
+      <div>lon: {position.coords.longitude}</div>
+      <div>acc: {position.coords.accuracy}</div>
     </div>
-    <App />
-  </ApolloProvider>
-);
+  )
+
+  // return (
+  //   <ApolloProvider client={client}>
+  //     <div>
+  //       <Map
+  //         provider={stamenToner}
+  //         height={300}
+  //         // width={300}
+  //         defaultCenter={[position.coords.latitude, position.coords.longitude]} defaultZoom={18}
+  //       >
+  //         <Marker width={50} anchor={[position.coords.latitude, position.coords.longitude]} />
+  //         {/* <Overlay
+  //         offset={[150, 150]}
+
+  //       >
+  //         <svg width={300} height={300}>
+  //           <defs>
+  //             <mask id="hole">
+  //               <rect width="100%" height="100%" fill="white" />
+  //               <circle r="100" cx="150" cy="150" fill="black" />
+  //             </mask>
+  //           </defs>
+  //           <rect id="donut" width="1000%" height="1000%" mask="url(#hole)" />
+  //         </svg>
+  //       </Overlay> */}
+  //       </Map>
+  //     </div>
+  //     <App latitude={position.coords.latitude} longitude={position.coords.longitude} />
+  //   </ApolloProvider>
+  // )
+};
+
+const AppProvider = () => {
+  const [position, setPosition] = useState<GeolocationPosition | undefined>(undefined);
+
+  if (!position) return <LocationScreen />
+
+  return <div>Next</div>
+}
 
 export default AppProvider;
