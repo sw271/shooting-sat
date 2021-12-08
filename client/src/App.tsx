@@ -18,6 +18,9 @@ import {
 import { ISatellitePass } from "./interfaces/ISatellitePass";
 import { SatellitePassTable } from "./components/SatellitePassTable";
 import { useEffect, useState } from "react";
+import { Map, Marker, Overlay } from "pigeon-maps"
+import { stamenToner } from 'pigeon-maps/providers'
+
 
 const cache: InMemoryCache = new InMemoryCache({
   typePolicies: {
@@ -150,6 +153,30 @@ function App() {
 
 const AppProvider: React.FC = () => (
   <ApolloProvider client={client}>
+    <div>
+      <Map
+        provider={stamenToner}
+        height={300}
+        // width={300}
+        defaultCenter={[LAT, LNG]} defaultZoom={18}
+      >
+        <Marker width={50} anchor={[LAT, LNG]} />
+        {/* <Overlay
+          offset={[150, 150]}
+
+        >
+          <svg width={300} height={300}>
+            <defs>
+              <mask id="hole">
+                <rect width="100%" height="100%" fill="white" />
+                <circle r="100" cx="150" cy="150" fill="black" />
+              </mask>
+            </defs>
+            <rect id="donut" width="1000%" height="1000%" mask="url(#hole)" />
+          </svg>
+        </Overlay> */}
+      </Map>
+    </div>
     <App />
   </ApolloProvider>
 );
