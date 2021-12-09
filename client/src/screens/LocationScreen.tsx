@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
-import { Draggable, Map, Marker, Overlay } from "pigeon-maps"
+import { Draggable, Map } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
@@ -28,7 +28,7 @@ export const LocationScreen = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setUsingGps(false);
-        console.log("got pos", pos)
+        console.log("position found", pos)
         setPosition({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
@@ -41,17 +41,10 @@ export const LocationScreen = () => {
       },
       (error) => {
         setUsingGps(false);
-        console.log("Handle no goeloaction")
-        console.log("posError", error)
-        // setPosition({
-
-        //   },
-        //   timestamp: Date.now()
-        // })
+        console.log("position error", error);
       },
       {
-        enableHighAccuracy: true,
-
+        enableHighAccuracy: true
       }
     )
   }
@@ -77,7 +70,8 @@ export const LocationScreen = () => {
           or
         </Typography>
         <Typography variant="h5" align="center" color="text.secondary" component="p"
-          sx={{ mt: 3, mb: 2 }}>
+          sx={{ mt: 3, mb: 2 }}
+        >
           Select from the Map
         </Typography>
       </Box>
@@ -106,6 +100,15 @@ export const LocationScreen = () => {
           <LocationOnIcon color="primary" sx={{ width: 50, height: 50, }} />
         </Draggable>
       </Map>
+      <Button
+        onClick={() => { console.log("TODO") }}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        color='success'
+      >
+        Accept Location
+      </Button>
     </ >
   )
 }
