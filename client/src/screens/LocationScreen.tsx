@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Button, TextField } from "@mui/material";
+import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
+import { LoadingButton } from '@mui/lab';
 import { Draggable, Map, Marker, Overlay } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -11,6 +12,7 @@ interface Position {
 }
 
 export const LocationScreen = () => {
+  const [usingGps, setUsingGps] = useState(false);
   const [position, setPosition] = useState<Position>({
     latitude: 1,
     longitude: 1,
@@ -22,8 +24,10 @@ export const LocationScreen = () => {
   })
 
   const useGps = () => {
+    setUsingGps(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        setUsingGps(false);
         console.log("got pos", pos)
         setPosition({
           latitude: pos.coords.latitude,
@@ -36,6 +40,7 @@ export const LocationScreen = () => {
         })
       },
       (error) => {
+        setUsingGps(false);
         console.log("Handle no goeloaction")
         console.log("posError", error)
         // setPosition({
@@ -52,14 +57,31 @@ export const LocationScreen = () => {
   }
 
   return (
-    <div>
-      <Button
-        onClick={useGps}
-        variant="contained">Use GPS</Button>
-      <div>or</div>
-      <TextField id="outlined-basic" label="Find address" variant="outlined" />
+    <>
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <LocationOnIcon />
+      </Avatar>
+      <Typography component="h1" variant="h5">
+        Where in the world are you?
+      </Typography>
+      <Box sx={{ mt: 1 }}>
+
+        <LoadingButton
+          onClick={useGps}
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          loading={usingGps}
+        >Use GPS</LoadingButton>
+        <Typography variant="h5" align="center" color="text.secondary" component="p">
+          or
+        </Typography>
+        <Typography variant="h5" align="center" color="text.secondary" component="p"
+          sx={{ mt: 3, mb: 2 }}>
+          Select from the Map
+        </Typography>
+      </Box>
       <Map
-        // ref={x}
         provider={stamenToner}
         height={300}
         center={[position.latitude, position.longitude]}
@@ -82,9 +104,8 @@ export const LocationScreen = () => {
           }}
         >
           <LocationOnIcon color="primary" sx={{ width: 50, height: 50, }} />
-          {/* <div>a</div> */}
         </Draggable>
       </Map>
-    </div >
+    </ >
   )
 }

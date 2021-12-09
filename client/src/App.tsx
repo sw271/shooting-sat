@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { Map, Marker, Overlay } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import { LocationScreen } from "./screens/LocationScreen";
+import { Box, Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 
 
 const cache: InMemoryCache = new InMemoryCache({
@@ -243,12 +244,27 @@ const AppProvider2: React.FC = () => {
   // )
 };
 
+const theme = createTheme();
 const AppProvider = () => {
   const [position, setPosition] = useState<GeolocationPosition | undefined>(undefined);
 
-  if (!position) return <LocationScreen />
+  return (
+    <ThemeProvider theme={theme} >
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          {position ? <div>Next</div> : <LocationScreen />}
+        </Box>
+      </Container>
 
-  return <div>Next</div>
+    </ThemeProvider>)
 }
 
 export default AppProvider;
