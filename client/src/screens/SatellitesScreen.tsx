@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { Map, Marker } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import { ILocation } from "../interfaces/ILocation";
+import { AppBar, Box, Container, Toolbar } from "@mui/material";
 
 
 const GET_EVENTS = gql`
@@ -109,29 +110,22 @@ export const SatellitesScreen: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <Map
-        provider={stamenToner}
-        height={300}
-        // width={300}
-        defaultCenter={[props.location.latitude, props.location.longitude]} defaultZoom={18}
+      <AppBar
+        position="sticky"
       >
-        <Marker width={50} anchor={[props.location.latitude, props.location.longitude]} />
-        {/* <Overlay
-          offset={[150, 150]}
-
+        <Map
+          provider={stamenToner}
+          height={300}
+          defaultCenter={[props.location.latitude, props.location.longitude]} defaultZoom={18}
         >
-          <svg width={300} height={300}>
-            <defs>
-              <mask id="hole">
-                <rect width="100%" height="100%" fill="white" />
-                <circle r="100" cx="150" cy="150" fill="black" />
-              </mask>
-            </defs>
-            <rect id="donut" width="1000%" height="1000%" mask="url(#hole)" />
-          </svg>
-        </Overlay> */}
-      </Map>
-      <App location={props.location} />
+          <Marker width={50} anchor={[props.location.latitude, props.location.longitude]} />
+        </Map>
+      </AppBar>
+      <Container>
+        <Box sx={{ my: 2 }}>
+          <App location={props.location} />
+        </Box>
+      </Container>
     </div>
   )
 };
