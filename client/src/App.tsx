@@ -22,6 +22,7 @@ import { Map, Marker, Overlay } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import { LocationScreen } from "./screens/LocationScreen";
 import { Box, Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { ILocation } from "./interfaces/ILocation";
 
 
 const cache: InMemoryCache = new InMemoryCache({
@@ -246,7 +247,8 @@ const AppProvider2: React.FC = () => {
 
 const theme = createTheme();
 const AppProvider = () => {
-  const [position, setPosition] = useState<GeolocationPosition | undefined>(undefined);
+  const [location, setLocation] = useState<ILocation | undefined>(undefined);
+  const [showLocationScreen, setShowLocationScreen] = useState<boolean>(false);
 
   return (
     <ThemeProvider theme={theme} >
@@ -260,7 +262,16 @@ const AppProvider = () => {
             alignItems: 'center',
           }}
         >
-          {position ? <div>Next</div> : <LocationScreen />}
+          {(
+            showLocationScreen || !location
+          ) ? (
+            <LocationScreen
+              location={location}
+              setLocation={setLocation}
+            />
+          ) : (
+            <div>Next</div>
+          )}
         </Box>
       </Container>
 

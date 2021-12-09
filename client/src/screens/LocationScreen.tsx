@@ -4,24 +4,33 @@ import { LoadingButton } from '@mui/lab';
 import { Draggable, Map } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { ILocation } from "../interfaces/ILocation";
 
-interface Position {
+interface IPosition {
   latitude: number;
   longitude: number;
   zoom: number;
 }
 
-export const LocationScreen = () => {
+interface Props {
+  location?: ILocation;
+  setLocation: (location: ILocation) => void;
+}
+
+const DEFAULT_LOCATION: ILocation = {
+  latitude: 1,
+  longitude: 1,
+}
+const DEFAULT_POSITION: IPosition = {
+  ...DEFAULT_LOCATION,
+  zoom: 1
+}
+const ZOOM_WHEN_LOCATED = 16;
+
+export const LocationScreen: React.FC<Props> = (props) => {
   const [usingGps, setUsingGps] = useState(false);
-  const [position, setPosition] = useState<Position>({
-    latitude: 1,
-    longitude: 1,
-    zoom: 1
-  });
-  const [marker, setMarker] = useState({
-    latitude: 1,
-    longitude: 1,
-  })
+  const [position, setPosition] = useState<IPosition>(props.location ? { ...props.location, zoom: ZOOM_WHEN_LOCATED } : DEFAULT_POSITION);
+  const [marker, setMarker] = useState<ILocation>(props.location ? props.location : DEFAULT_LOCATION)
 
   const useGps = () => {
     setUsingGps(true);
@@ -32,7 +41,7 @@ export const LocationScreen = () => {
         setPosition({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
-          zoom: 16
+          zoom: ZOOM_WHEN_LOCATED
         });
         setMarker({
           latitude: pos.coords.latitude,
@@ -47,6 +56,10 @@ export const LocationScreen = () => {
         enableHighAccuracy: true
       }
     )
+  }
+
+  const onAccept = () => {
+    props.setLocation(marker);
   }
 
   return (
@@ -101,7 +114,7 @@ export const LocationScreen = () => {
         </Draggable>
       </Map>
       <Button
-        onClick={() => { console.log("TODO") }}
+        onClick={onAccept}
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
