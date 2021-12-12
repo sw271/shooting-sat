@@ -14,7 +14,7 @@ import { stamenToner } from 'pigeon-maps/providers'
 import { ILocation } from "../interfaces/ILocation";
 import { AppBar, Box, Container, Toolbar } from "@mui/material";
 import { ZOOM_WHEN_LOCATED } from "./LocationScreen";
-
+import { Location } from "../models/Location"
 
 const GET_EVENTS = gql`
   query GetEvents($lat: Float!, $lng: Float!, $dateFromIncUtc: String) {
@@ -37,7 +37,7 @@ const GET_EVENTS = gql`
 `;
 
 interface Props2 {
-  location: ILocation;
+  location: Location;
 }
 const App: React.FC<Props2> = (props) => {
   useEffect(() => {
@@ -103,7 +103,7 @@ const App: React.FC<Props2> = (props) => {
 }
 
 interface Props {
-  location: ILocation;
+  location: Location;
   setShowLocationScreen: () => void;
 }
 

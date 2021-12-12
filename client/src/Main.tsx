@@ -9,9 +9,11 @@ import { GET_SHOW_LOCATION_SCREEN } from "./operations/queries/getShowLocationSc
 import { useGetLocation, useGetShowLocation } from "./operations/queries";
 
 export const Main = () => {
+
   const locationQuery = useGetLocation();
   const showLocationScreenQuery = useGetShowLocation();
   console.log("Location", locationQuery.data)
+  console.log("showLocationScreenQuery", showLocationScreenQuery.data)
 
   return (
     <Container component="main" maxWidth="xs">

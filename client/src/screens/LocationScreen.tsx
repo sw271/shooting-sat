@@ -6,6 +6,7 @@ import { stamenToner } from 'pigeon-maps/providers'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ILocation } from "../interfaces/ILocation";
 import { mutations } from "../operations/mutations";
+import { Location } from "../models/Location";
 
 interface IPosition {
   latitude: number;
@@ -14,7 +15,7 @@ interface IPosition {
 }
 
 interface Props {
-  location?: ILocation;
+  location?: Location;
   setLocation: (location: ILocation) => void;
 }
 

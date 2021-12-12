@@ -1,12 +1,15 @@
 import {
-  InMemoryCache, makeVar, ReactiveVar,
+  InMemoryCache, makeVar, ReactiveVar, useReactiveVar
 } from "@apollo/client";
 import { ILocation } from "./interfaces/ILocation";
 import { IGetEventsPayload } from "./interfaces/ISatelliteEvent";
 import { Location } from "./models/Location";
+import { persistCache, LocalStorageWrapper } from 'apollo3-cache-persist';
+import { makePersistantVar } from "./makePersistantVar";
 
 
-export const cache: InMemoryCache = new InMemoryCache({
+const cache: InMemoryCache = new InMemoryCache({
+
   typePolicies: {
     Query: {
       fields: {
@@ -54,6 +57,15 @@ export const cache: InMemoryCache = new InMemoryCache({
   },
 });
 
+export const initializeCache = async () => {
+  await persistCache({
+    cache,
+    storage: new LocalStorageWrapper(window.localStorage),
+  });
+  return cache;
+}
 
-export const locationVar: ReactiveVar<Location> = makeVar<Location>(undefined);
+
+
+export const locationVar: ReactiveVar<Location | undefined> = makePersistantVar<Location | undefined>(undefined, 'location');
 export const locationScreenVar: ReactiveVar<boolean> = makeVar<boolean>(false);
