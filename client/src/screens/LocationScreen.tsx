@@ -5,6 +5,7 @@ import { Draggable, Map } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ILocation } from "../interfaces/ILocation";
+import { mutations } from "../operations/mutations";
 
 interface IPosition {
   latitude: number;
@@ -25,7 +26,7 @@ const DEFAULT_POSITION: IPosition = {
   ...DEFAULT_LOCATION,
   zoom: 1
 }
-const ZOOM_WHEN_LOCATED = 16;
+export const ZOOM_WHEN_LOCATED = 16;
 
 export const LocationScreen: React.FC<Props> = (props) => {
   const [usingGps, setUsingGps] = useState(false);
@@ -58,9 +59,7 @@ export const LocationScreen: React.FC<Props> = (props) => {
     )
   }
 
-  const onAccept = () => {
-    props.setLocation(marker);
-  }
+  const onAccept = () => mutations.setLocation(marker)
 
   return (
     <>

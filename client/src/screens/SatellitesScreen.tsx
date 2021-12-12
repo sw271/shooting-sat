@@ -13,6 +13,7 @@ import { Map, Marker } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import { ILocation } from "../interfaces/ILocation";
 import { AppBar, Box, Container, Toolbar } from "@mui/material";
+import { ZOOM_WHEN_LOCATED } from "./LocationScreen";
 
 
 const GET_EVENTS = gql`
@@ -116,7 +117,7 @@ export const SatellitesScreen: React.FC<Props> = (props) => {
         <Map
           provider={stamenToner}
           height={300}
-          defaultCenter={[props.location.latitude, props.location.longitude]} defaultZoom={18}
+          defaultCenter={[props.location.latitude, props.location.longitude]} defaultZoom={ZOOM_WHEN_LOCATED}
         >
           <Marker width={50} anchor={[props.location.latitude, props.location.longitude]} />
         </Map>
