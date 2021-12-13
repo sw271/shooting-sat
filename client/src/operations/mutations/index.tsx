@@ -1,6 +1,8 @@
 import { setLocation } from "./setLocation";
-import { locationVar } from "../../cache";
+import { setShowLocationScreen } from "./setShowLocationScreen"
+import { locationVar, locationScreenVar } from "../../cache";
 
 export const mutations = {
-  setLocation: setLocation(locationVar)
+  setLocation: setLocation(locationVar),
+  setShowLocationScreen: setShowLocationScreen(locationScreenVar)
 }

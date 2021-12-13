@@ -60,7 +60,10 @@ export const LocationScreen: React.FC<Props> = (props) => {
     )
   }
 
-  const onAccept = () => mutations.setLocation(marker)
+  const onAccept = () => {
+    mutations.setLocation(marker);
+    mutations.setShowLocationScreen(false);
+  }
 
   return (
     <>

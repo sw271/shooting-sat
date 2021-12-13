@@ -12,9 +12,10 @@ import { useEffect } from "react";
 import { Map, Marker } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import { ILocation } from "../interfaces/ILocation";
-import { AppBar, Box, Container, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, ButtonGroup, Container, Toolbar } from "@mui/material";
 import { ZOOM_WHEN_LOCATED } from "./LocationScreen";
 import { Location } from "../models/Location"
+import { mutations } from "../operations/mutations";
 
 const GET_EVENTS = gql`
   query GetEvents($lat: Float!, $lng: Float!, $dateFromIncUtc: String) {
@@ -111,6 +112,12 @@ export const SatellitesScreen: React.FC<Props> = (props) => {
 
   return (
     <div>
+      <ButtonGroup fullWidth>
+        <Button>Forget Me</Button>
+        <Button
+          onClick={() => mutations.setShowLocationScreen(true)}
+        >Change Location</Button>
+      </ButtonGroup>
       <AppBar
         position="sticky"
       >
