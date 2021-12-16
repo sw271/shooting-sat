@@ -1,82 +1,25 @@
-import {
-  useQuery,
-  gql,
-  useApolloClient,
-} from "@apollo/client";
-import {
-  EEventType,
-  IGetEventsPayload,
-} from "../interfaces/ISatelliteEvent";
+import { useApolloClient } from "@apollo/client";
+import { EEventType } from "../interfaces/ISatelliteEvent";
 import { ISatellitePass } from "../interfaces/ISatellitePass";
 import { SatellitePassTable } from "../components/SatellitePassTable";
-import { useEffect } from "react";
 import { Map, Marker } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
-import { ILocation } from "../interfaces/ILocation";
-import { AppBar, Box, Button, ButtonGroup, Container, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, ButtonGroup, Container } from "@mui/material";
 import { ZOOM_WHEN_LOCATED } from "./LocationScreen";
 import { Location } from "../models/Location"
 import { mutations } from "../operations/mutations";
-import { InvariantError } from "@apollo/client/utilities/globals";
-import { useGetSatellitesInfo } from "../operations/queries";
+import { useGetEvents, useGetSatellitesInfo } from "../operations/queries";
 
-const GET_EVENTS = gql`
-  query GetEvents($lat: Float!, $lng: Float!, $dateFromIncUtc: String) {
-    getEvents(
-      input: { lat: $lat, lng: $lng, dateFromIncUtc: $dateFromIncUtc }
-    ) {
-      dateFromIncUtc
-      dateToExcUtc
-      satelliteEvents {
-        satelliteId
-        events {
-          dateUtc
-          type
-          azimuth
-          altitude
-        }
-      }
-    }
-  }
-`;
+
 
 interface Props2 {
   location: Location;
 }
 const App: React.FC<Props2> = (props) => {
   const q = useGetSatellitesInfo();
-  useEffect(() => {
-    if (data) {
-      const firstDate = new Date(data.getEvents.dateFromIncUtc).valueOf();
-      const lastDate = new Date(data.getEvents.dateToExcUtc).valueOf();
-      if (lastDate - firstDate < 1000 * 60 * 60 * 24) {
-        fetchMore({
-          variables: {
-            lat: props.location.latitude,
-            lng: props.location.longitude,
-            dateFromIncUtc: data.getEvents.dateToExcUtc,
-          },
-        })
-          .catch(e => {
-            if (e instanceof InvariantError) {
-              if (e.message === "Store reset while query was in flight (not completed in link chain)") {
-                // pass: this is ok, we have probably hit the "forgert me button"
-                console.log("Error caught while restting store");
-                return;
-              }
-            }
-            throw e;
-          });
-      }
-    }
-  });
-  const { loading, error, data, fetchMore } = useQuery<{
-    getEvents: IGetEventsPayload;
-  }>(GET_EVENTS, {
-    variables: {
-      lat: props.location.latitude,
-      lng: props.location.longitude,
-    },
+  const { loading, error, data } = useGetEvents({
+    lat: props.location.latitude,
+    lng: props.location.longitude,
   });
   if (loading || q.loading) return <p>Loading...</p>;
   if (error || !data || q.error || !q.data) return <p>Error :(</p>;
