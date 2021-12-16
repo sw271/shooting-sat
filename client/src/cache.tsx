@@ -1,7 +1,7 @@
 import {
   InMemoryCache, makeVar, ReactiveVar
 } from "@apollo/client";
-import { Location } from "./models/Location";
+import { ILocation } from "./models/ILocation";
 import { persistCache, LocalStorageWrapper } from 'apollo3-cache-persist';
 import { makePersistantVar } from "./makePersistantVar";
 import { GetEventsPayload } from "./operations/queries/getEvents";
@@ -66,5 +66,5 @@ export const initializeCache = async () => {
 
 
 
-export const locationVar: ReactiveVar<Location | undefined> = makePersistantVar<Location | undefined>(undefined, 'location');
+export const locationVar: ReactiveVar<ILocation | undefined> = makePersistantVar<ILocation | undefined>(undefined, 'location');
 export const locationScreenVar: ReactiveVar<boolean> = makeVar<boolean>(false);

@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { ISatelliteEvents } from "../../interfaces/ISatelliteEvent";
+import { ISatelliteEvents } from "../../models/ISatelliteEvent";
 
 export interface GetEventsInput {
   lat: number;

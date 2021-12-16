@@ -1,19 +1,19 @@
 import { useApolloClient } from "@apollo/client";
-import { EEventType } from "../interfaces/ISatelliteEvent";
-import { ISatellitePass } from "../interfaces/ISatellitePass";
+import { EEventType } from "../models/ISatelliteEvent";
+import { ISatellitePass } from "../models/ISatellitePass";
 import { SatellitePassTable } from "../components/SatellitePassTable";
 import { Map, Marker } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import { AppBar, Box, Button, ButtonGroup, Container } from "@mui/material";
 import { ZOOM_WHEN_LOCATED } from "./LocationScreen";
-import { Location } from "../models/Location"
+import { ILocation } from "../models/ILocation"
 import { mutations } from "../operations/mutations";
 import { useGetEvents, useGetSatellitesInfo } from "../operations/queries";
 
 
 
 interface Props2 {
-  location: Location;
+  location: ILocation;
 }
 const App: React.FC<Props2> = (props) => {
   const q = useGetSatellitesInfo();
@@ -63,7 +63,7 @@ const App: React.FC<Props2> = (props) => {
 }
 
 interface Props {
-  location: Location;
+  location: ILocation;
   setShowLocationScreen: () => void;
 }
 

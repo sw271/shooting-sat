@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
-import { Location } from "../../models/Location";
+import { ILocation } from "../../models/ILocation";
 
 export interface GetLocationData {
-  location: Location | undefined;
+  location: ILocation | undefined;
 }
 
 export const GET_LOCATION = gql`

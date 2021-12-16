@@ -4,9 +4,8 @@ import { LoadingButton } from '@mui/lab';
 import { Draggable, Map } from "pigeon-maps"
 import { stamenToner } from 'pigeon-maps/providers'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { ILocation } from "../interfaces/ILocation";
 import { mutations } from "../operations/mutations";
-import { Location } from "../models/Location";
+import { ILocation } from "../models/ILocation";
 
 interface IPosition {
   latitude: number;
@@ -15,7 +14,7 @@ interface IPosition {
 }
 
 interface Props {
-  location?: Location;
+  location?: ILocation;
   setLocation: (location: ILocation) => void;
 }
 

@@ -1,4 +1,4 @@
-export type Location = {
+export type ILocation = {
   latitude: number;
   longitude: number;
 };

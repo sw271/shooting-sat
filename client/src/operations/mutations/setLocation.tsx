@@ -1,8 +1,8 @@
-import { Location } from "../../models/Location";
+import { ILocation } from "../../models/ILocation";
 import { ReactiveVar } from "@apollo/client";
 
-export const setLocation = (locationVar: ReactiveVar<Location | undefined>) => {
-  return (location: Location | undefined) => {
+export const setLocation = (locationVar: ReactiveVar<ILocation | undefined>) => {
+  return (location: ILocation | undefined) => {
     locationVar(location);
   }
 }
