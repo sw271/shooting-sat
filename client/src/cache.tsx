@@ -1,11 +1,10 @@
 import {
-  InMemoryCache, makeVar, ReactiveVar, useReactiveVar
+  InMemoryCache, makeVar, ReactiveVar
 } from "@apollo/client";
-import { ILocation } from "./interfaces/ILocation";
-import { IGetEventsPayload } from "./interfaces/ISatelliteEvent";
 import { Location } from "./models/Location";
 import { persistCache, LocalStorageWrapper } from 'apollo3-cache-persist';
 import { makePersistantVar } from "./makePersistantVar";
+import { GetEventsPayload } from "./operations/queries/getEvents";
 
 
 const cache: InMemoryCache = new InMemoryCache({
@@ -25,9 +24,9 @@ const cache: InMemoryCache = new InMemoryCache({
         },
         getEvents: {
           keyArgs: false,
-          merge(existing: IGetEventsPayload, incoming: IGetEventsPayload) {
+          merge(existing: GetEventsPayload, incoming: GetEventsPayload) {
             if (!existing) return incoming;
-            const ret: IGetEventsPayload = {
+            const ret: GetEventsPayload = {
               ...existing,
               dateToExcUtc: incoming.dateToExcUtc,
               satelliteEvents: existing.satelliteEvents.map((x) => {

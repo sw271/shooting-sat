@@ -1,8 +1,4 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache
-} from "@apollo/client";
+import { ApolloClient, ApolloProvider } from "@apollo/client";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { initializeCache } from "./cache";

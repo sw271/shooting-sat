@@ -1,18 +1,17 @@
 import { useQuery } from "@apollo/client";
 import { InvariantError } from "@apollo/client/utilities/globals";
 import { useEffect } from "react";
-import { Location } from "../../models/Location";
-import { GetEventsInput, GetEventsPayload, GET_EVENTS } from "./getEvents";
-import { GET_LOCATION } from "./getLocation";
-import { GetSatellitesInfoPayload, GET_SATELLITES_INFO } from "./getSatellitesInfo";
-import { GET_SHOW_LOCATION_SCREEN } from "./getShowLocationScreen";
+import { GetEventsData, GetEventsInput, GET_EVENTS } from "./getEvents";
+import { GetLocationData, GET_LOCATION } from "./getLocation";
+import { GetSatellitesInfoData, GET_SATELLITES_INFO } from "./getSatellitesInfo";
+import { GetShowLocationScreenData, GET_SHOW_LOCATION_SCREEN } from "./getShowLocationScreen";
 
 
-export const useGetLocation = () => useQuery<{ location: Location | undefined }>(GET_LOCATION);
-export const useGetShowLocation = () => useQuery<{ showLocationScreen: boolean }>(GET_SHOW_LOCATION_SCREEN);
-export const useGetSatellitesInfo = () => useQuery<GetSatellitesInfoPayload>(GET_SATELLITES_INFO);
+export const useGetLocation = () => useQuery<GetLocationData>(GET_LOCATION);
+export const useGetShowLocation = () => useQuery<GetShowLocationScreenData>(GET_SHOW_LOCATION_SCREEN);
+export const useGetSatellitesInfo = () => useQuery<GetSatellitesInfoData>(GET_SATELLITES_INFO);
 export const useGetEvents = (variables: { lat: number, lng: number }) => {
-  const q = useQuery<GetEventsPayload, GetEventsInput>(GET_EVENTS, { variables });
+  const q = useQuery<GetEventsData, GetEventsInput>(GET_EVENTS, { variables });
   useEffect(() => {
     if (q.data) {
       const firstDate = new Date(q.data.getEvents.dateFromIncUtc).valueOf();

@@ -1,13 +1,14 @@
 import { gql } from "@apollo/client";
 
 export interface GetSatellitesInfoPayload {
-  getSatellitesInfo: {
-    info: {
-      name: string;
-      id: string;
-      type: string;
-    }[];
-  }
+  info: {
+    name: string;
+    id: string;
+    type: string;
+  }[];
+}
+export interface GetSatellitesInfoData {
+  getSatellitesInfo: GetSatellitesInfoPayload;
 }
 
 export const GET_SATELLITES_INFO = gql`

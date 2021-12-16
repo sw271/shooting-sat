@@ -1,19 +1,12 @@
-import { useState } from "react";
 import { LocationScreen } from "./screens/LocationScreen";
 import { Box, Container, CssBaseline } from "@mui/material";
-import { ILocation } from "./interfaces/ILocation";
 import { SatellitesScreen } from "./screens/SatellitesScreen";
-import { GET_LOCATION } from "./operations/queries/getLocation";
-import { useQuery } from "@apollo/client";
-import { GET_SHOW_LOCATION_SCREEN } from "./operations/queries/getShowLocationScreen";
-import { useGetLocation, useGetSatellitesInfo, useGetShowLocation } from "./operations/queries";
+import { useGetLocation, useGetShowLocation } from "./operations/queries";
 
 export const Main = () => {
 
   const locationQuery = useGetLocation();
   const showLocationScreenQuery = useGetShowLocation();
-  console.log("Location", locationQuery.data)
-  console.log("showLocationScreenQuery", showLocationScreenQuery.data)
 
   return (
     <Container component="main" maxWidth="xs">

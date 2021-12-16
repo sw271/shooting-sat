@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { IGetEventsPayload } from "../../interfaces/ISatelliteEvent";
+import { ISatelliteEvents } from "../../interfaces/ISatelliteEvent";
 
 export interface GetEventsInput {
   lat: number;
@@ -7,7 +7,12 @@ export interface GetEventsInput {
   dateFromIncUtc?: string;
 }
 export interface GetEventsPayload {
-  getEvents: IGetEventsPayload;
+  dateFromIncUtc: string;
+  dateToExcUtc: string;
+  satelliteEvents: ISatelliteEvents[];
+}
+export interface GetEventsData {
+  getEvents: GetEventsPayload;
 }
 
 export const GET_EVENTS = gql`

@@ -1,9 +1,3 @@
-export interface IGetEventsPayload {
-  dateFromIncUtc: string;
-  dateToExcUtc: string;
-  satelliteEvents: ISatelliteEvents[];
-}
-
 export interface ISatelliteEvents {
   satelliteId: string;
   events: IEvent[];
