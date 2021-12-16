@@ -5,47 +5,39 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { ISatellitePass } from "../models/ISatellitePass";
+import prettyMilliseconds from "pretty-ms";
 
 interface Props {
   data: ISatellitePass[];
 }
 
 export const SatellitePassTable: React.FC<Props> = (props) => {
+  const timeNow = Date.now();
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer>
+      <Table sx={{ minWidth: 600 }}>
         <TableHead>
           <TableRow>
-            <TableCell />
-            <TableCell align="center" colSpan={3}>
-              Rise
-            </TableCell>
-            <TableCell />
-          </TableRow>
-          <TableRow>
+            <TableCell>In</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Time (local)</TableCell>
-            <TableCell>Duration (mins)</TableCell>
-            <TableCell>Azimuth (degrees)</TableCell>
-            <TableCell>Cloud Cover (%)</TableCell>
+            <TableCell>Duration</TableCell>
+            <TableCell>Expected Cloud Cover (%)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.data.map((d) => (
-            <TableRow key={d.name + d.riseDatetime.toISOString()}>
-              <TableCell>{d.name} </TableCell>
-              <TableCell>{d.riseDatetime.toLocaleString()} </TableCell>
-              <TableCell>
-                {(d.setDatetime.valueOf() - d.riseDatetime.valueOf()) /
-                  1000 /
-                  60}
-              </TableCell>
-              <TableCell>{d.riseAzimuth} </TableCell>
-              <TableCell>{"-"}</TableCell>
-            </TableRow>
-          ))}
+          {props.data.map((d) => {
+            const timeUntil = d.riseDatetime.valueOf() - timeNow;
+            const duration = d.setDatetime.valueOf() - d.riseDatetime.valueOf();
+            return (
+              <TableRow key={d.name + d.riseDatetime.toISOString()}>
+                <TableCell>{timeUntil < 0 ? "now" : prettyMilliseconds(timeUntil, { compact: true })}</TableCell>
+                <TableCell>{d.name} </TableCell>
+                <TableCell>{prettyMilliseconds(duration, { compact: true })}</TableCell>
+                <TableCell>{"-"}</TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </TableContainer>
