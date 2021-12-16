@@ -3,6 +3,7 @@ from ariadne import gql
 type_defs = gql("""
     type Query {
         getEvents(input: GetEventsInput!): GetEventsPayload!
+        getSatellitesInfo: GetSatellitesInfoPayload!
     }
 
     input GetEventsInput {
@@ -32,5 +33,13 @@ type_defs = gql("""
         type: EventType!
         azimuth: Float!
         altitude: Float!
+    }
+    type GetSatellitesInfoPayload {
+        info: [SatelliteInfo!]!
+    }
+    type SatelliteInfo {
+        name: String!
+        id: String!
+        type: String!
     }
 """)

@@ -6,7 +6,7 @@ import { SatellitesScreen } from "./screens/SatellitesScreen";
 import { GET_LOCATION } from "./operations/queries/getLocation";
 import { useQuery } from "@apollo/client";
 import { GET_SHOW_LOCATION_SCREEN } from "./operations/queries/getShowLocationScreen";
-import { useGetLocation, useGetShowLocation } from "./operations/queries";
+import { useGetLocation, useGetSatellitesInfo, useGetShowLocation } from "./operations/queries";
 
 export const Main = () => {
 

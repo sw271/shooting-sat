@@ -1,6 +1,6 @@
 from datetime import datetime
 from ariadne import QueryType
-from satellites.satellites import get_visible_events
+from satellites.satellites import get_visible_events, get_satellites_info
 # from satellites.weather import weather
 
 query = QueryType()
@@ -24,3 +24,9 @@ def resolve_get_events(*_, input):
     print(f"Date: {date}")
 
     return get_visible_events(lat=lat, lng=lng, altitude_degrees=alt, date_from_utc=date)
+
+@query.field("getSatellitesInfo")
+def resolve_get_satellites_info(*_):
+    return {
+        "info": get_satellites_info()
+    }

@@ -18,6 +18,7 @@ import { ZOOM_WHEN_LOCATED } from "./LocationScreen";
 import { Location } from "../models/Location"
 import { mutations } from "../operations/mutations";
 import { InvariantError } from "@apollo/client/utilities/globals";
+import { useGetSatellitesInfo } from "../operations/queries";
 
 const GET_EVENTS = gql`
   query GetEvents($lat: Float!, $lng: Float!, $dateFromIncUtc: String) {
@@ -43,6 +44,7 @@ interface Props2 {
   location: Location;
 }
 const App: React.FC<Props2> = (props) => {
+  const q = useGetSatellitesInfo();
   useEffect(() => {
     if (data) {
       const firstDate = new Date(data.getEvents.dateFromIncUtc).valueOf();
@@ -76,34 +78,37 @@ const App: React.FC<Props2> = (props) => {
       lng: props.location.longitude,
     },
   });
-  if (loading) return <p>Loading...</p>;
-  if (error || !data) return <p>Error :(</p>;
+  if (loading || q.loading) return <p>Loading...</p>;
+  if (error || !data || q.error || !q.data) return <p>Error :(</p>;
 
   const passes: ISatellitePass[] = [];
-  data.getEvents.satelliteEvents.forEach((sat) => {
-    let riseDatetime: Date | undefined = undefined;
-    let riseAzimuth: number | undefined = undefined;
-    sat.events.forEach((e) => {
-      if (e.type === EEventType.RISE) {
-        riseDatetime = new Date(e.dateUtc);
-        riseAzimuth = e.azimuth;
-      } else if (
-        e.type === EEventType.SET &&
-        riseDatetime !== undefined &&
-        riseAzimuth !== undefined
-      ) {
-        passes.push({
-          name: sat.satelliteId,
-          riseDatetime,
-          riseAzimuth,
-          setDatetime: new Date(e.dateUtc),
-          setAzimuth: e.azimuth,
-        });
-        riseDatetime = undefined;
-        riseAzimuth = undefined;
-      }
+  if (q.data) {
+    data.getEvents.satelliteEvents.forEach((sat) => {
+      let riseDatetime: Date | undefined = undefined;
+      let riseAzimuth: number | undefined = undefined;
+      sat.events.forEach((e) => {
+        if (e.type === EEventType.RISE) {
+          riseDatetime = new Date(e.dateUtc);
+          riseAzimuth = e.azimuth;
+        } else if (
+          e.type === EEventType.SET &&
+          riseDatetime !== undefined &&
+          riseAzimuth !== undefined
+        ) {
+          const info = q.data?.getSatellitesInfo.info.find(x => x.id === sat.satelliteId);
+          passes.push({
+            name: info ? info.name : sat.satelliteId,
+            riseDatetime,
+            riseAzimuth,
+            setDatetime: new Date(e.dateUtc),
+            setAzimuth: e.azimuth,
+          });
+          riseDatetime = undefined;
+          riseAzimuth = undefined;
+        }
+      });
     });
-  });
+  }
 
   passes.sort((a, b) => a.riseDatetime.valueOf() - b.riseDatetime.valueOf());
 

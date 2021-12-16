@@ -4,6 +4,7 @@ from typing import TypedDict
 from skyfield.api import load, wgs84
 from skyfield import almanac
 import pytz
+import csv
 
 
 class SatelliteEventType(IntEnum):
@@ -32,8 +33,19 @@ class SatelliteVisibleEvents(TypedDict):
 
 PLANETS_BSP = 'de421.bsp'
 STATIONS_URL = '/data/visual.txt'
-# print(post_weight(0))
+SATCAT_URL = '/data/satcat.csv'
 
+def get_satellites_info():
+    satellites = load.tle_file(STATIONS_URL)
+    ids = [ f"{satellite.model.satnum}" for satellite in satellites ]
+    ret = []
+    with open(SATCAT_URL, 'r') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader, None)  # skip the headers
+        for r in reader:
+            if r[2] in ids:
+                ret.append({ "name": r[0], "id": r[2], "type": r[3] })
+    return ret
 
 def get_visible_events(lat: float, lng: float, altitude_degrees: float, date_from_utc: datetime = None, future_mins=120) -> SatelliteVisibleEvents:
     location = wgs84.latlon(lat, lng)
