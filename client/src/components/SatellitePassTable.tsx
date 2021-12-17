@@ -7,10 +7,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { ISatellitePass } from "../models/ISatellitePass";
 import prettyMilliseconds from "pretty-ms";
+import { UpdatingTableCell } from "./UpdatingTimeTableCell";
 
 interface Props {
   data: ISatellitePass[];
 }
+
 
 export const SatellitePassTable: React.FC<Props> = (props) => {
   const timeNow = Date.now();
@@ -27,11 +29,11 @@ export const SatellitePassTable: React.FC<Props> = (props) => {
         </TableHead>
         <TableBody>
           {props.data.map((d) => {
-            const timeUntil = d.riseDatetime.valueOf() - timeNow;
             const duration = d.setDatetime.valueOf() - d.riseDatetime.valueOf();
             return (
               <TableRow key={d.name + d.riseDatetime.toISOString()}>
-                <TableCell>{timeUntil < 0 ? "now" : prettyMilliseconds(timeUntil, { compact: true })}</TableCell>
+                <UpdatingTableCell
+                  to={d.riseDatetime.valueOf()} />
                 <TableCell>{d.name} </TableCell>
                 <TableCell>{prettyMilliseconds(duration, { compact: true })}</TableCell>
                 <TableCell>{"-"}</TableCell>
