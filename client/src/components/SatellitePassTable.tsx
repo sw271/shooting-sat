@@ -15,7 +15,6 @@ interface Props {
 
 
 export const SatellitePassTable: React.FC<Props> = (props) => {
-  const timeNow = Date.now();
   return (
     <TableContainer>
       <Table sx={{ minWidth: 600 }}>

@@ -1,30 +1,15 @@
 import { ApolloClient, ApolloProvider } from "@apollo/client";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
-import { initializeCache } from "./cache";
+import { cache } from "./cache";
 import { Main } from "./Main";
 
-
-
+const client = new ApolloClient({
+  uri: "http://localhost:8000",
+  cache,
+});
 const theme = createTheme();
-const AppProvider = () => {
-  const [client, setClient] = useState<ApolloClient<unknown> | undefined>(undefined);
-  useEffect(() => {
-    const genClient = async () => {
-      console.log("generating client");
-      const cache = await initializeCache();
-      const client = new ApolloClient({
-        uri: "http://localhost:8000",
-        cache,
-      });
-      setClient(client);
-    }
-    genClient();
-  }, []);
 
-  if (!client) {
-    return (<div>Loading...</div>)
-  }
+const AppProvider = () => {
 
   return (
     <ApolloProvider client={client}>
