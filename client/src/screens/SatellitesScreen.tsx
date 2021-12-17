@@ -2,13 +2,11 @@ import { useApolloClient } from "@apollo/client";
 import { EEventType } from "../models/ISatelliteEvent";
 import { ISatellitePass } from "../models/ISatellitePass";
 import { SatellitePassTable } from "../components/SatellitePassTable";
-import { Map, Marker } from "pigeon-maps"
-import { stamenToner } from 'pigeon-maps/providers'
 import { AppBar, Box, Button, ButtonGroup, Container } from "@mui/material";
-import { ZOOM_WHEN_LOCATED } from "./LocationScreen";
 import { ILocation } from "../models/ILocation"
 import { mutations } from "../operations/mutations";
 import { useGetEvents, useGetSatellitesInfo } from "../operations/queries";
+import { SatelliteMapView } from "../components/SatelliteMapView";
 
 
 
@@ -85,13 +83,7 @@ export const SatellitesScreen: React.FC<Props> = (props) => {
       <AppBar
         position="sticky"
       >
-        <Map
-          provider={stamenToner}
-          height={300}
-          defaultCenter={[props.location.latitude, props.location.longitude]} defaultZoom={ZOOM_WHEN_LOCATED}
-        >
-          <Marker width={50} anchor={[props.location.latitude, props.location.longitude]} />
-        </Map>
+        <SatelliteMapView location={props.location} />
       </AppBar>
       <Container>
         <Box sx={{ my: 2 }}>

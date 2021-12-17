@@ -2,6 +2,7 @@ import { InMemoryCache, makeVar, ReactiveVar } from "@apollo/client";
 import { ILocation } from "./models/ILocation";
 import { makePersistantVar } from "./makePersistantVar";
 import { GetEventsPayload } from "./operations/queries/getEvents";
+import { ISatellitePass } from "./models/ISatellitePass";
 
 export const cache: InMemoryCache = new InMemoryCache({
 
@@ -18,10 +19,17 @@ export const cache: InMemoryCache = new InMemoryCache({
             return locationScreenVar();
           }
         },
+        selectedSatellitePass: {
+          read() {
+            return selectedSatellitePassVar();
+          }
+        },
         getEvents: {
           keyArgs: false,
           merge(existing: GetEventsPayload, incoming: GetEventsPayload) {
             if (!existing) return incoming;
+            // dont merge already gotten:
+            if (incoming.dateFromIncUtc !== existing.dateToExcUtc) return incoming;
             const ret: GetEventsPayload = {
               ...existing,
               dateToExcUtc: incoming.dateToExcUtc,
@@ -52,5 +60,6 @@ export const cache: InMemoryCache = new InMemoryCache({
   },
 });
 
-export const locationVar: ReactiveVar<ILocation | undefined> = makePersistantVar<ILocation | undefined>(undefined, 'location');
-export const locationScreenVar: ReactiveVar<boolean> = makeVar<boolean>(false);
+export const locationVar = makePersistantVar<ILocation | undefined>(undefined, 'location');
+export const locationScreenVar = makeVar<boolean>(false);
+export const selectedSatellitePassVar = makeVar<ISatellitePass | undefined>(undefined);

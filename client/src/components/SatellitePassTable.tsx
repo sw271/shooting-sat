@@ -8,12 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import { ISatellitePass } from "../models/ISatellitePass";
 import prettyMilliseconds from "pretty-ms";
 import { UpdatingTableCell } from "./UpdatingTimeTableCell";
+import { mutations } from "../operations/mutations";
 
 interface Props {
   data: ISatellitePass[];
 }
-
-
 export const SatellitePassTable: React.FC<Props> = (props) => {
   return (
     <TableContainer>
@@ -30,7 +29,12 @@ export const SatellitePassTable: React.FC<Props> = (props) => {
           {props.data.map((d) => {
             const duration = d.setDatetime.valueOf() - d.riseDatetime.valueOf();
             return (
-              <TableRow key={d.name + d.riseDatetime.toISOString()}>
+              <TableRow
+                key={d.name + d.riseDatetime.toISOString()}
+                onClick={() => {
+                  mutations.setSelectedSatellitePass(d)
+                }}
+              >
                 <UpdatingTableCell
                   to={d.riseDatetime.valueOf()} />
                 <TableCell>{d.name} </TableCell>

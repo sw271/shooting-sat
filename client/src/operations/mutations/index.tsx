@@ -1,8 +1,10 @@
 import { setLocation } from "./setLocation";
 import { setShowLocationScreen } from "./setShowLocationScreen"
-import { locationVar, locationScreenVar } from "../../cache";
+import { setSelectedSatellitePass } from "./setSelectedSatellitePass"
+import { locationVar, locationScreenVar, selectedSatellitePassVar } from "../../cache";
 
 export const mutations = {
   setLocation: setLocation(locationVar),
-  setShowLocationScreen: setShowLocationScreen(locationScreenVar)
+  setShowLocationScreen: setShowLocationScreen(locationScreenVar),
+  setSelectedSatellitePass: setSelectedSatellitePass(selectedSatellitePassVar)
 }
