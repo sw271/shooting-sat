@@ -77,7 +77,10 @@ export const SatellitesScreen: React.FC<Props> = (props) => {
           }}
         >Forget Me</Button>
         <Button
-          onClick={() => mutations.setShowLocationScreen(true)}
+          onClick={() => {
+            mutations.setShowLocationScreen(true);
+            client.resetStore();
+          }}
         >Change Location</Button>
       </ButtonGroup>
       <AppBar
