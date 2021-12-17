@@ -9,11 +9,14 @@ import { ISatellitePass } from "../models/ISatellitePass";
 import prettyMilliseconds from "pretty-ms";
 import { UpdatingTableCell } from "./UpdatingTimeTableCell";
 import { mutations } from "../operations/mutations";
+import { useGetSelectedSatellitePass } from "../operations/queries";
 
 interface Props {
   data: ISatellitePass[];
 }
 export const SatellitePassTable: React.FC<Props> = (props) => {
+  const q = useGetSelectedSatellitePass();
+  const selected = q.data?.selectedSatellitePass;
   return (
     <TableContainer>
       <Table sx={{ minWidth: 600 }}>
@@ -34,6 +37,7 @@ export const SatellitePassTable: React.FC<Props> = (props) => {
                 onClick={() => {
                   mutations.setSelectedSatellitePass(d)
                 }}
+                selected={selected && selected.name === d.name && selected.riseDatetime === d.riseDatetime}
               >
                 <UpdatingTableCell
                   to={d.riseDatetime.valueOf()} />
