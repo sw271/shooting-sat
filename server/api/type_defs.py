@@ -4,6 +4,7 @@ type_defs = gql("""
     type Query {
         getEvents(input: GetEventsInput!): GetEventsPayload!
         getSatellitesInfo: GetSatellitesInfoPayload!
+        getWeather(input: GetWeatherInput!): GetWeatherPayload!
     }
 
     input GetEventsInput {
@@ -12,11 +13,22 @@ type_defs = gql("""
         alt: Float
         dateFromIncUtc: String
     }
+    input GetWeatherInput {
+        lat: Float!
+        lng: Float!
+    }
 
     type GetEventsPayload {
         dateFromIncUtc: String!
         dateToExcUtc: String!
         satelliteEvents: [SatelliteEvents!]!
+    }
+    type GetWeatherPayload {
+        hourly: [Weather!]!
+    }
+    type Weather {
+        ref_time: Int!
+        clouds: Int!
     }
 
     enum EventType {

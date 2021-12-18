@@ -1,7 +1,7 @@
 from datetime import datetime
 from ariadne import QueryType
 from satellites.satellites import get_visible_events, get_satellites_info
-# from satellites.weather import weather
+from satellites.weather import weather
 
 query = QueryType()
 
@@ -29,4 +29,18 @@ def resolve_get_events(*_, input):
 def resolve_get_satellites_info(*_):
     return {
         "info": get_satellites_info()
+    }
+
+@query.field("getWeather")
+def resolve_get_weather(*_, input):
+    if input is None:
+        return
+    lat = input['lat']
+    lng = input['lng']
+    print(f"Lat: {lat}")
+    print(f"Lng: {lng}")
+    print("------------------CALLING WEATHER ----------------------")
+    w = weather().forecast_hourly(lat, lng)
+    return {
+        "hourly": w
     }

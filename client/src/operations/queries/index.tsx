@@ -6,12 +6,14 @@ import { GetLocationData, GET_LOCATION } from "./getLocation";
 import { GetSatellitesInfoData, GET_SATELLITES_INFO } from "./getSatellitesInfo";
 import { GetSelectedSattelitePass, GET_SELECTED_SATELLITE_PASS } from "./getSelectedSatellitePass";
 import { GetShowLocationScreenData, GET_SHOW_LOCATION_SCREEN } from "./getShowLocationScreen";
+import { GetWeatherData, GetWeatherInput, GET_WEATHER } from "./getWeather";
 
 
 export const useGetLocation = () => useQuery<GetLocationData>(GET_LOCATION);
 export const useGetShowLocation = () => useQuery<GetShowLocationScreenData>(GET_SHOW_LOCATION_SCREEN);
 export const useGetSatellitesInfo = () => useQuery<GetSatellitesInfoData>(GET_SATELLITES_INFO);
 export const useGetSelectedSatellitePass = () => useQuery<GetSelectedSattelitePass>(GET_SELECTED_SATELLITE_PASS);
+export const useGetWeather = (variables: { lat: number, lng: number }) => useQuery<GetWeatherData, GetWeatherInput>(GET_WEATHER, { variables });
 export const useGetEvents = (variables: { lat: number, lng: number }) => {
   const q = useQuery<GetEventsData, GetEventsInput>(GET_EVENTS, { variables });
   useEffect(() => {

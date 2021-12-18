@@ -55,7 +55,7 @@ const App: React.FC<Props2> = (props) => {
 
   return (
     <div className="App">
-      <SatellitePassTable data={passes} />
+      <SatellitePassTable data={passes} location={props.location} />
     </div>
   );
 }
