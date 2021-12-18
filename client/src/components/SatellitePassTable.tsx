@@ -46,7 +46,9 @@ export const SatellitePassTable: React.FC<Props> = (props) => {
 
   return (
     <TableContainer>
-      <Table sx={{ minWidth: 600 }}>
+      <Table
+      // sx={{ minWidth: 600 }}
+      >
         <TableHead>
           <TableRow>
             <TableCell>In</TableCell>
