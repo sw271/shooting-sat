@@ -30,6 +30,6 @@ services:
       - ./cron:/project
       - ./data:/data
     working_dir: /project
-    entrypoint: tail -f /dev/null
+    entrypoint: bash -c "pip install -r requirements.txt && python3 ./main.py"
 networks:
   app-net:
