@@ -1,5 +1,6 @@
 FROM node:14-alpine AS builder
 ENV NODE_ENV production
+ENV REACT_APP_API_ENDPOINT /api
 # Add a work directory
 WORKDIR /app
 # Cache and Install dependencies

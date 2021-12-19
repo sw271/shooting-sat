@@ -10,7 +10,9 @@ services:
     ports:
       - 3000:3000
     working_dir: /project
-    entrypoint: sh -c "yarn install && HTTPS=true yarn start"
+    entrypoint: sh -c "yarn install && yarn start"
+    environment:
+      - REACT_APP_API_ENDPOINT=http://localhost:8000
   server:
     image: python:3-slim-buster
     networks:
