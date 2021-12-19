@@ -3,24 +3,37 @@ services:
   server:
     container_name: server-prod
     image: server-prod
-    networks:
-      - app-net
     build:
       dockerfile: ./production/server/Dockerfile
       context: .
-      target: production
+    networks:
+      - app-net
+    volumes:
+      - data:/data
+    depends_on:
+      - cron
   app:
     container_name: app-prod
     image: app-prod
-    networks:
-      - app-net
     build:
       dockerfile: ./production/client/Dockerfile
       context: .
       target: production
+    networks:
+      - app-net
     ports:
       - 80:80
     depends_on:
       - server
+  cron:
+    container_name: cron-prod
+    image: cron-prod
+    build:
+      dockerfile: ./production/cron/Dockerfile
+      context: .
+    volumes:
+      - data:/data
 networks:
   app-net:
+volumes:
+  data:

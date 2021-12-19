@@ -29,10 +29,8 @@ export const UpdatingTableCell: React.FC<Props> = (props) => {
       else {
         timems = MS_1SEC;
       }
-      console.log("Creating interval with:", timems)
 
       const interval = setInterval(() => {
-        console.log("executing interval")
         setTimeleft(props.to - Date.now());
       }, timems);
       return () => clearInterval(interval);
